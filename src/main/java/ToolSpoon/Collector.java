@@ -31,7 +31,7 @@ public class Collector {
         try {
             List<Failure> test = TestRunner.runTest(fullQualifiedName, testMethodName, new String[]{path});
             if (test.size() == 0) {
-                System.out.println("Test " + testMethodName + ": SUCCESS");
+                System.out.println("Unit Test of " + testMethodName + ": SUCCESS");
             } else {
                 test.stream().forEach(failure -> System.out.println(failure.toString()));
             }

@@ -14,37 +14,42 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import static ToolSpoon.Util.interfaceTerminal;
+
 public class main {
     public static void main(String[] args) throws IOException {
-        String filePath;
+        String filePath ;
         String file;
         String assertMethod;
         int numberAssert;
-        if(args.length < 4){
-            System.out.println("put arguments of the main method like this -> ");
-            System.out.println("[Path of the maven project] [$Package.ClassTest] [methodTest] [number of assertion]");
-            return;
-        }else {
-            filePath = args[0].replace("\\", "/");
-            file = args[1];
-            assertMethod = args[2].replace("()", "");
-            numberAssert = Integer.valueOf(args[3]);
+        if(args.length < 4) {
+            args = interfaceTerminal();
         }
+        filePath = args[0].replace("\\", "/");
+        file = args[1];
+        assertMethod = args[2].replace("()", "");
+        numberAssert = Integer.valueOf(args[3]);
+
 
         Launcher spoon = new Launcher();
         spoon.addInputResource(filePath);
         spoon.buildModel();
         Factory factory = spoon.getFactory();
+        factory.getEnvironment().setAutoImports(true);
         Analyzer analyzer = new Analyzer();
         Collector collector = new Collector(factory);
         AssertionAdder assertionAdder= new AssertionAdder(factory);
 
         CtClass<?> ctClassTest = factory.Class().get(file);
-        if(ctClassTest.equals(null)){
-            System.out.println("Fichier introuvable");
+        if(ctClassTest == null){
+            System.out.println("File don't exist<");
             return ;
         }
         CtMethod ctMethodTest = ctClassTest.getMethod(assertMethod);
+        if(ctMethodTest == null){
+            System.out.println("Method don't exist");
+            return;
+        }
         Map<CtMethod, List<CtLocalVariable>> localVariables = analyzer.analyze(ctClassTest);
         for(CtMethod ctMethod : localVariables.keySet()){
             CtLocalVariable test = localVariables.get(ctMethod).get(0);
@@ -56,6 +61,8 @@ public class main {
             System.out.println();
             CtMethod newMethod = assertionAdder.addAssertion(ctMethodTest, localVariables.get(ctMethod),numberAssert);
             System.out.println(newMethod);
+            ctClassTest.removeMethod(ctMethodTest);
+            ctClassTest.addMethod(newMethod);
             collector.run(ctClassTest,newMethod);
         }
 

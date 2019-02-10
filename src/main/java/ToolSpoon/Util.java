@@ -1,25 +1,65 @@
 package ToolSpoon;
 
+import spoon.Launcher;
+import spoon.OutputType;
 import spoon.reflect.code.*;
+import spoon.reflect.cu.CompilationUnit;
+import spoon.reflect.cu.SourcePosition;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.CtExecutableReference;
+import spoon.reflect.reference.CtReference;
 import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
+import spoon.support.JavaOutputProcessor;
 import spoon.support.reflect.code.*;
+import spoon.support.reflect.cu.position.SourcePositionImpl;
 import spoon.support.reflect.reference.CtFieldReferenceImpl;
 
+import javax.swing.text.Position;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-/**
- * Created by Benjamin DANGLOT
- * benjamin.danglot@inria.fr
- * on 26/06/17
- */
 public class Util {
-
+	public static String[] interfaceTerminal(){
+		String filePath ="";
+		String fileTest="";
+		String methodTest="";
+		int numberAssertions=0;
+		Scanner scanner = new Scanner(System.in);
+		boolean exists = false;
+		String[] args = new String[4];
+		while(filePath.equals("") && exists == false){
+			System.out.println("Enter the path to maven project");
+			filePath= scanner.next();
+			File tmpDir = new File(filePath);
+			exists = tmpDir.exists();
+			if(!exists){
+				System.out.println(filePath + " n'existe pas");
+			}
+		}
+		while(fileTest.equals("")){
+			System.out.println("Enter the name of the test class with the package. exemple: SomePackage.testclass");
+			fileTest = scanner.next();
+		}
+		while(methodTest.equals("")){
+			System.out.println("Enter the name of the method to be tested ex: testAge");
+			methodTest= scanner.next();
+		}
+		while(numberAssertions == 0){
+			System.out.println("Enter the number of assertion");
+			numberAssertions= scanner.nextInt();
+		}
+		args[0]=filePath;
+		args[1]=fileTest;
+		args[2]=methodTest;
+		args[3]=String.valueOf(numberAssertions);
+		return args;
+	}
 	public static void saveArguments(CtConstructorCallImpl contructorClassTest, CtClass classParent){
 		List<CtExpression> argumentsConstructorTest = contructorClassTest.getArguments();
 		List<CtParameter> argumentsConstructeurParent = null;
@@ -61,16 +101,13 @@ public class Util {
 	public static void filterReturn(CtMethod ctMethod, Map<String,CtMethod> map,Map<String,String> mapParamField){
 		List<CtReturnImpl> temp = ctMethod.getElements(new TypeFilter<>(CtReturnImpl.class));
 		if(temp.size() > 0) {
-			List<CtFieldReadImpl> fields = temp.get(0).getElements(new TypeFilter<>(CtFieldReadImpl.class));
-			if(fields.size()>0){
-				map.put(mapParamField.get(fields.get(0).getVariable().getSimpleName()),ctMethod);
+			if(!(temp.get(0).getReturnedExpression() instanceof CtBinaryOperatorImpl)) {
+				List<CtFieldReadImpl> fields = temp.get(0).getElements(new TypeFilter<>(CtFieldReadImpl.class));
+				if (fields.size() > 0) {
+					map.put(mapParamField.get(fields.get(0).getVariable().getSimpleName()), ctMethod);
+				}
 			}
-
 		}
-	}
-
-	public static String getKey(CtMethod method) {
-		return method.getParent(CtClass.class).getSimpleName() + "#" + method.getSimpleName();
 	}
 
 	public static CtInvocation invok(CtMethod method, CtLocalVariable localVariable) {

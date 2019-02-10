@@ -35,7 +35,6 @@ public class AssertionAdder {
 				getGetters(localVariable);
 		getters = filterGetters(getters, testMethod).stream().limit(numberAssertions).collect(Collectors.toList());
 		getters.forEach(getter -> {
-			String key = getKey(getter);
 			CtInvocation invocationToGetter =
 					invok(getter, localVariable);
 			CtInvocation invocationToAssert = createAssert("assertEquals",

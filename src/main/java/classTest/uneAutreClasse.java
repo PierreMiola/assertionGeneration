@@ -45,7 +45,7 @@ public class uneAutreClasse {
 	}
 }
 
-class RasLeBolTest{
+class uneAutreClasseTest{
 	
 	@Test
 	public void test1() {
