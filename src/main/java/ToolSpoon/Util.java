@@ -1,25 +1,14 @@
 package ToolSpoon;
 
-import spoon.Launcher;
-import spoon.OutputType;
 import spoon.reflect.code.*;
-import spoon.reflect.cu.CompilationUnit;
-import spoon.reflect.cu.SourcePosition;
 import spoon.reflect.declaration.*;
 import spoon.reflect.reference.CtExecutableReference;
-import spoon.reflect.reference.CtReference;
 import spoon.reflect.reference.CtTypeReference;
 import spoon.reflect.visitor.filter.TypeFilter;
-import spoon.support.JavaOutputProcessor;
 import spoon.support.reflect.code.*;
-import spoon.support.reflect.cu.position.SourcePositionImpl;
 import spoon.support.reflect.reference.CtFieldReferenceImpl;
 
-import javax.swing.text.Position;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.stream.Collectors;
