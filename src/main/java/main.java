@@ -42,7 +42,7 @@ public class main {
 
         CtClass<?> ctClassTest = factory.Class().get(file);
         if(ctClassTest == null){
-            System.out.println("File don't exist<");
+            System.out.println("File don't exist");
             return ;
         }
         CtMethod ctMethodTest = ctClassTest.getMethod(assertMethod);
