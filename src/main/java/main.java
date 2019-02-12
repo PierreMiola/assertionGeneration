@@ -18,7 +18,7 @@ import static ToolSpoon.Util.interfaceTerminal;
 
 public class main {
     public static void main(String[] args) throws IOException {
-        String filePath ;
+        String filePath;
         String file;
         String assertMethod;
         int numberAssert;
@@ -29,8 +29,7 @@ public class main {
         file = args[1];
         assertMethod = args[2].replace("()", "");
         numberAssert = Integer.valueOf(args[3]);
-
-
+      
         Launcher spoon = new Launcher();
         spoon.addInputResource(filePath);
         spoon.buildModel();
